@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shenhe- Trang web dịch thông minh có tích hợp AI </title>
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+</head>
+<body>
+    <div class="bg-overlay"></div>
+    <div class="snowflakes" aria-hidden="true">
+        <div class="snowflake">❅</div><div class="snowflake">❆</div><div class="snowflake">❅</div>
+        <div class="snowflake">❆</div><div class="snowflake">❅</div><div class="snowflake">❆</div>
+        <div class="snowflake">❅</div><div class="snowflake">❆</div><div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+    </div>
+<!-- container -->
+    <div class="container">
+        <header class="header">
+            <div class="logo-wrapper">
+                <img src="z7380825672263_ad24dc14adf844e76cd8bce7250e08a2.jpg" alt="Shenhe Avatar" class="shenhe-avatar">
+                <div class="logo-text">
+                    <h1>Shenhe Translate</h1>
+                    <p>Shenhe- Trang web dịch thông minh có tích hợp AI</p>
+                </div>
+            </div>
+        </header>
+<!-- Hộp văn bản -->
+        <main class="glass-box">
+            
+            <nav class="mode-tabs">
+                <button class="tab-btn active" data-tab="text"><i class="fa-solid fa-font"></i> Văn bản</button>
+                <button class="tab-btn" data-tab="image"><i class="fa-regular fa-image"></i> Hình ảnh</button>
+                <button class="tab-btn" data-tab="website"><i class="fa-solid fa-globe"></i> Trang web</button>
+            </nav>
+<!-- Nút chọn ngôn ngữ  -->
+            <div class="controls">
+                <div class="select-wrapper">
+                    <select id="sourceLang">
+                        <option value="auto">✨ Tự động</option>
+                        <option value="vi">Tiếng Việt</option>
+                        <option value="en">Tiếng Anh</option>
+                        <option value="zh-CN">Tiếng Trung</option>
+                        <option value="ja">Tiếng Nhật</option>
+                        <option value="ko">Tiếng Hàn</option>
+                        <option value="fr">Tiếng Pháp</option>
+                    </select>
+                </div>
+
+                <button id="swapBtn" class="icon-btn" title="Đảo ngược ngôn ngữ">
+                    <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                </button>
+
+                <div class="select-wrapper">
+                    <select id="targetLang">
+                        <option value="en">Tiếng Anh</option>
+                        <option value="vi" selected>Tiếng Việt</option>
+                        <option value="zh-CN">Tiếng Trung</option>
+                        <option value="ja">Tiếng Nhật</option>
+                        <option value="ko">Tiếng Hàn</option>
+                        <option value="fr">Tiếng Pháp</option>
+                    </select>
+                </div>
+            </div>
+<!-- ô cần dịch -->
+            <div id="textPanel" class="tab-panel active">
+                <div class="translation-area">
+                    <div class="text-box source-box">
+                        <textarea id="sourceText" placeholder="Nhập văn bản cần dịch..."></textarea>
+                        <div class="tools-bar">
+                            <span id="charCount">0/5000</span>
+                            <div class="actions">
+                                <button id="pasteBtn" title="Dán"><i class="fa-regular fa-paste"></i></button>
+                                <button id="speakSourceBtn" title="Đọc"><i class="fa-solid fa-volume-high"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-box target-box">
+                        <div class="loading-overlay" id="loader"><i class="fa-solid fa-snowflake fa-spin"></i></div>
+                        <textarea id="targetText" placeholder="Bản dịch sẽ hiện ở đây..." readonly></textarea>
+                        <div class="tools-bar">
+                            <div class="actions right">
+                                <button id="copyBtn" title="Sao chép"><i class="fa-regular fa-copy"></i></button>
+                                <button id="speakTargetBtn" title="Đọc"><i class="fa-solid fa-volume-high"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="translateBtn" class="big-btn"><span>Dịch Ngay</span> <i class="fa-solid fa-wand-magic-sparkles"></i></button>
+            </div>
+<!-- khu nhập ảnh -->
+            <div id="imagePanel" class="tab-panel">
+                <div class="upload-area" id="dropZone">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <p>Nhấn để tải ảnh lên</p>
+                    <p class="sub-text">Shenhe sẽ tự động quét chữ trong ảnh</p>
+                    <input type="file" id="imageInput" accept="image/*" hidden>
+                </div>
+                <div id="imagePreviewContainer" style="display: none;">
+                    <img id="imagePreview" src="" alt="Preview">
+                    <p id="ocrStatus" class="status-text">❄️ Đang xử lý...</p>
+                </div>
+            </div>
+<!-- dịch từ website -->
+            <div id="websitePanel" class="tab-panel">
+                <div class="url-input-group">
+                    <input type="text" id="websiteUrl" placeholder="Nhập link trang web (VD: genshin.hoyoverse.com)">
+                    <button id="translateWebBtn" class="big-btn"><span>Dịch Trang Web</span> <i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
